@@ -1,0 +1,26 @@
+sesli_harf = ["a","e","o","u","ö","ü","ı","i","A","E","O","U","Ü","Ö","I","İ"]
+rakam = ["1","2","3","4","5","6","7","8","9","0"]
+print("Bu program girdiğiniz hafin sesli mi yoksa sessiz mi olduğunu göstermek için yazılmıştır.")
+
+while True:
+
+
+    harf = input("Bir harf giriniz:")
+
+    if harf in sesli_harf:
+        print("Girdiğiniz harf sesli bir harftir")
+        break
+
+    elif len(harf)>1:
+        print("Lütfen bir HARF giriniz")
+        continue
+        #kullanıcının yanlış girdi girmesi ihtimaline karşılık yeniden denemesi için kullanılmıştır
+    elif harf in rakam :
+        print("Bir sayı girdiniz")
+        print("Lütfen bir HARF giriniz")
+        continue
+
+
+    else:
+        print("girdiğiniz harf sessiz bir harftir")
+        break
