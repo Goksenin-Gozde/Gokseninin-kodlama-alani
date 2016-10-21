@@ -1,0 +1,21 @@
+ogrenci = input("Öğrencinin adını ve soyadını yazınız:")
+ogrenci_cinsiyet = input("Öğrencinin cinsiyetini yazınız (E/K):")
+ogrenci_cinsiyet = ogrenci_cinsiyet.lower()
+ogrenci_not = float(input("Öğrencinin not ortalamasını giriniz:"))
+kız_ogrenci_bursu = 0
+not_bursu = 0
+
+
+if (ogrenci_cinsiyet == "k"):
+    kız_gelir = int(input("Kız öğrencinin ailesinin gelirini yazınız:"))
+    if kız_gelir < 1300:
+        kız_ogrenci_bursu = 100
+
+
+if ogrenci_not >= 2:
+    not_bursu = ogrenci_not*25
+
+burs = 100+kız_ogrenci_bursu+not_bursu
+
+print(ogrenci,"isimli Öğrenciye verilecek burs miktarı",burs)
+
