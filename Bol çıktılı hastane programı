@@ -1,0 +1,58 @@
+agir_hasta = 0
+orta_hasta = 0
+hafif_hasta = 0
+agir_yuzde = 0
+agir_ilac= 0
+orta_ilac = 0
+hafif_ilac = 0
+agir_ilac_yuzde = 0
+toplam_hasta=0
+toplam_ilac = 0
+ortalama_ilac = 0
+max_ilac = 0
+max_faktor = 0
+print("İşlemi bitirmek için 0'dan küçük veya 50'den büyük bir değer girmeniz yeterlidir.")
+hasta_faktor = float(input("Lütfen hastanın faktör seviyesini giriniz: "))
+while 0<hasta_faktor<50:
+
+    hasta_ilac = int(input("Hastanın aylık ilaç tüketim miktarını giriniz"))
+    toplam_hasta+=1
+    toplam_ilac=hasta_ilac+toplam_ilac
+    if hasta_ilac > max_ilac:
+        max_ilac = hasta_ilac
+        max_faktor = hasta_faktor
+    if hasta_faktor<1:
+        print("Hastalığın seviyesi ağır")
+        agir_hasta +=1
+        agir_ilac = hasta_ilac+agir_ilac
+    elif 1<= hasta_faktor < 5:
+        print("Hastalığın seviyesi orta")
+        orta_hasta +=1
+        orta_ilac = hasta_ilac+orta_ilac
+    elif 5<= hasta_faktor < 50:
+        print("Hastalığın seviyesi hafif")
+        hafif_hasta+=1
+        hafif_ilac = hasta_ilac+hafif_ilac
+    hasta_faktor = float(input("Lütfen hastanın faktör seviyesini giriniz: "))
+agir_ilac_yuzde = agir_ilac/toplam_ilac*100
+agir_yuzde = agir_hasta/toplam_hasta*100
+ortalama_ilac = toplam_ilac/toplam_hasta
+
+
+print("#"*10)
+print("Ağır hasta sayısı:",agir_hasta)
+print("Ağır hastaların diğer hastalar arasındaki yüzdesi:%",format(agir_yuzde,".2f"))
+print("Ağır hastaların ilaç tüketim miktarı:" , agir_ilac)
+print("Ağır hastalarının ilaç tüketim yüzdesi :%",format(agir_ilac_yuzde,".2f"))
+print("#"*10)
+print("Orta hasta sayısı :",orta_hasta)
+print("Orta hastaların ilaç tüketim miktarı:",orta_ilac)
+print("#"*10)
+print("Hafif hastaların sayısı:",hafif_hasta)
+print("Hafif hastaların ilaç tüketim miktarı: ",hafif_ilac)
+print("#"*10)
+print("Toplam hasta sayısı:",toplam_hasta)
+print("Toplam ilaç tüketimi:",toplam_ilac)
+print("En fazla ilaç tüketen hastanın ilaç tüketim miktarı:",max_ilac)
+print("En fazla ilaç tüketen hastanın faktör seviyesi",max_faktor)
+print("Bir hastanın ortalama ilaç tüketim miktarı",format(ortalama_ilac,".2f"))
