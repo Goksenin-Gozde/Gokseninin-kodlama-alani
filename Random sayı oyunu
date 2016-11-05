@@ -1,0 +1,64 @@
+Skip to content
+ 
+ 
+Search…
+All gists
+GitHub
+New gist @Goksenin-Gozde
+ Edit
+  Delete
+  Star 0
+  @Goksenin-GozdeGoksenin-Gozde/random sayı oyunu Secret
+Created 2 hours ago
+Embed  
+<script src="https://gist.github.com/Goksenin-Gozde/5ace32bb01bbb918a08b5f460bf49138.js"></script>
+  Download ZIP
+ Code  Revisions 1
+Raw
+ random sayı oyunu
+import random
+
+oyun_modu = int(
+    input("Eğer siz sayı tutmak istiyorsanız 1'i bilgisayarın sayı tutmasını istiyorsanız 2'yi tuşlayınız:"))
+if oyun_modu == 2:
+    sayi = random.randint(1, 100)
+    tahmin = int(input("Lütfen 1 ile 100 arasında bir sayı tahmin ediniz: "))
+    sayac = 0
+    while sayi != tahmin:
+
+        if sayi < tahmin:
+            print("Tahmininiz bizim sayımızdan daha büyük")
+            sayac += 1
+            tahmin = int(input("Lütfen 1 ile 100 arasında bir sayı tahmin ediniz: "))
+            continue
+        else:
+            print("Tahmininiz bizim sayımızadan daha küçük")
+            sayac += 1
+            tahmin = int(input("Lütfen 1 ile 100 arasında bir sayı tahmin ediniz: "))
+            continue
+
+    if sayi == tahmin:
+        print(sayac, "Tahminle sayıyı buldunuz.")
+
+if oyun_modu == 1:
+    print("Lütfen aklınızdan bir sayı tutunuz")
+    print("Bilgisayar bir sayı tahmin edecek ve sizden yönlendirmeler isteyecek")
+    print("")
+
+    bilg_tahmin = random.randint(1, 100)
+    print(bilg_tahmin)
+    yonlendir = int(input(
+        "Eğer tuttuğunuz sayı bilgisayarın tuttuğu sayıdan büyükse 1'ituttuğunuz sayı bilgisayarın tuttuğu sayıdan küçükse 2'yi tuşlayınız"))
+    if yonlendir == 1:
+        yeni_tahmin = random.randint(bilg_tahmin, 100)
+ @Goksenin-Gozde
+  
+         
+Write  Preview
+
+Leave a comment
+Attach files by dragging & dropping,  Dosyaları Seç selecting them, or pasting from the clipboard.
+ Styling with Markdown is supported
+Comment
+Contact GitHub API Training Shop Blog About
+© 2016 GitHub, Inc. Terms Privacy Security Status Help
