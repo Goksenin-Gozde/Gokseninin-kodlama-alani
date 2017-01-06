@@ -1,0 +1,237 @@
+import random
+def menu():
+    print("""1. Fal Bakma Oyunu
+2. Blackjack (21) Oyunu
+3. Çıkış""")
+    secim = sayi_al(1,3)
+    if secim == 1:
+        print("Fal bakma oyununu seçtiniz")
+        fal_bakma_oyunu()
+        menu()
+    elif secim ==2:
+        print("Blackjack oyununu seçtiniz")
+        Blackjack()
+        menu()
+    else:
+        cikis = input("Çıkmak istediğinize emin misiniz?(e/E/h/H): ")
+
+        while not (cikis == "e" or cikis == "h" or cikis == "E" or cikis == "H"):
+            cikis = input("Çıkmak istediğinize emin misiniz?(e/E/h/H): ")
+
+        if cikis == "e" or cikis == "E":
+            print("Çıkışınız yapılıyor...")
+            return 0
+        else:
+            print("Menüye yönlendiriliyorsunuz...")
+            menu()
+def sayi_al(alt_sinir,ust_sinir):
+    try:
+        sayi = int(input("Lütfen seçiminizi giriniz({},{} arasında)".format(alt_sinir,ust_sinir)))
+
+    except ValueError:
+        print("Lütfen integer bir değer giriniz.")
+
+    while not (alt_sinir <= sayi <= ust_sinir):
+        print("Geçersiz bir değer girdiniz...")
+        sayi = int(input("Lütfen seçiminizi giriniz({},{} arasında)".format(alt_sinir, ust_sinir)))
+
+    return sayi
+
+def deste_olustur():
+    deste = []
+    for i in range(1, 14): # i  sayı değerlerini yakalarken kart_yuzu değişkeni kartların cinslerini yakalayacak
+        for kart_yuzu in ("maça","sinek","kupa","karo"):
+            deste.append({"yuz":kart_yuzu,"sayi":i}) # Her bir kart için bir sözlük oluşturulacak
+
+    return deste
+
+def desteden_kart_cek(deste):
+
+    kart = random.choice(deste) # Modülerliği arttırmak için çekilen kartın elle yok edilmesi daha uygun görüldü
+
+    return kart
+
+def cikarilan_kartlari_topla(kart):
+    cikarilan_kartlar = []          #Fal bakma oyunu için puan kartı dışında kalan kartları yeniden desteye almak için
+    cikarilan_kartlar.append(kart)  #yazılmış fonksiyon
+    return cikarilan_kartlar
+def kart_yazdir(kart):
+    isim = ""
+    if kart["sayi"] == 1:  # Blackjack oyununda As'ın 11 olması durumu bu fonksiyondan bağımsız ayarlanacak
+        isim = "As"
+    elif kart["sayi"] == 11:
+        isim = "Vale"
+    elif kart["sayi"] == 12:
+        isim = "Kız"
+    elif kart ["sayi"] == 13:
+        isim = "Papaz"
+    else:
+        isim = str(kart["sayi"])
+    return kart["yuz"]+" "+ isim
+
+
+def kart_degeri_hesapla(kart):
+    if kart["sayi"] == 11 or kart["sayi"] == 12 or kart["sayi"] == 13:
+        return 10
+    else:
+        return kart["sayi"]
+def as_var_mi(elindeki_kart):  # Bu boolean değer ile blackjack oyunundaki as problemini çözmeyi amaçladık
+    for i in elindeki_kart:
+        if i["sayi"] == 1:
+
+            return True
+def deste_yazdir (deste):
+    for i in deste:
+        print(kart_yazdir(i))
+
+def fal_bakma_oyunu():
+    print("Dileğinizi tutmamayı seçmeniz halinde menüye yönlendirileceksiniz.")
+    niyet = input("Dileğinizi tuttunuz mu? (e/E/h/H): ")
+
+    while not (niyet == "e" or niyet == "h" or niyet == "E" or niyet == "H"):
+        print("Hatalı bir giriş yaptınız.")
+        niyet = input("Dileğinizi tuttunuz mu? (e/E/h/H): ")
+    if niyet == "h" or niyet == "H":
+        menu()
+    else:
+        deste = deste_olustur()
+        puan = 0
+        while len(deste) > 0 :
+
+            cikarilan_kartlar = [] # Döngü bittikten sonra gerekli durumda desteye geri eklenecek kartları barındıran
+            for i in range (1,14):  #geçici liste
+                print("Kart çekmek için Enter'a basınız.")
+                input() #Gerçeğe yakın ve kolay kullanılması için basitçe enter'a basmanın yeterli olacağını düşündük
+                if len(deste) == 0: # Deste döngü tamamlanmadan biterse çıkış yapmak için break kullanmak zorunda kaldık
+                    break
+                kart = desteden_kart_cek(deste)
+                deste.remove(kart)
+                print(i,". sıradaki kart",kart_yazdir(kart))
+                cikarilan_kartlar.append(kart)
+                if kart["sayi"] == i:
+                    puan += kart_degeri_hesapla(kart)
+                    print("Kartınız eşleşti...")
+                    print("Kartınızın değeri puanınıza eklendi")
+                    cikarilan_kartlar.remove(kart)
+                    deste += cikarilan_kartlar
+                    print("Puan kartı dışındaki kartlarınız destenize eklendi")
+                    break
+
+
+
+            print("sıralama başa dönüyor")
+
+        print("Dileğinizin gerçekleşme ihtimali: %{}".format(puan))
+def Blackjack():
+    deste = deste_olustur() # Fonksiyon içerisinde kullanacağımız gerekli atamalar
+    oyuncu_kartlari = []
+    dagitici_kartlari = []
+    oyuncu_puani = 0
+    dagitici_puani = 0
+    oyuncu_batti = False
+    dagitici_batti = False
+    oyuncu_blackjack = False
+    dagitici_blackjack = False
+    as_secildi = False
+    print("Dağıtıcının açık kartı : ")
+    for i in range (2): # her iki tarafta 2 kart çekiyor ve dağıtınıcının yalnız 1 kartı görüntüleniyor
+        kart = desteden_kart_cek(deste)
+        deste.remove(kart)
+        dagitici_kartlari.append(kart)
+        dagitici_puani += kart_degeri_hesapla(kart)
+    if dagitici_puani == 21:
+        dagitici_blackjack = True
+
+    print(kart_yazdir(dagitici_kartlari[0]))
+
+    if as_var_mi(dagitici_kartlari): # Dağıtıcıda as var ise puanı 21'i geçmediği takdirde 11 sayılır.
+        dagitici_puani += 10         # ilk elden 21'i geçemez 2 as gelse bile puan 12 olacaktır.
+    print("Oyuncunun kartarı")
+    for i in range (2): # oyuncunun durumunu tahlil etmesi için başta 2 kart verilip puanları yazdırılıyor
+        kart = desteden_kart_cek(deste)
+        print(kart_yazdir(kart))
+        deste.remove(kart)
+        oyuncu_kartlari.append(kart)
+
+        oyuncu_puani += kart_degeri_hesapla(kart)
+
+    if as_var_mi(oyuncu_kartlari): # Oyuncu as çekmesi halinde asın puanına karar veriyor.
+        print("Hangi puanı seçmek istersiniz? 1-) {} 2-) {}".format(oyuncu_puani,oyuncu_puani+10))
+
+        puan_sec = sayi_al(1,2)
+        if puan_sec == 2:
+            oyuncu_puani += 10
+            as_secildi = True
+    if oyuncu_puani == 21:
+        oyuncu_blackjack = True
+    print("Oyuncunun puanı : ", oyuncu_puani)
+    if oyuncu_puani < 21:
+        kart_cek = input("Kart çekmek için (k/K) pas demek için (p/P) tuşlayınız: ")
+    else:
+        kart_cek = "H"
+    while (kart_cek == "k" or kart_cek == "K"):
+        kart = desteden_kart_cek(deste)
+        deste.remove(kart)
+        oyuncu_puani += kart_degeri_hesapla(kart)
+        oyuncu_kartlari.append(kart)
+
+        if kart["sayi"] == 1 and oyuncu_puani < 12: # Oyuncunun puanı eğer 12den yüksekse as geldiği takdirde direk 1
+            print("Hangi puanı seçmek istersiniz? 1-) {} 2-) {}".format(oyuncu_puani, oyuncu_puani + 10))# sayılır
+            puan_sec = sayi_al(1, 2)
+            if puan_sec == 2:
+                oyuncu_puani += 10
+        if as_secildi and oyuncu_puani > 21: # Oyuncu ilk tercihinde +10 puan aldıysa burada telafi edilir.
+            oyuncu_puani -= 10
+            as_secildi = False # Sonraki döngüde yeniden çalışmaması için
+
+        if oyuncu_puani < 21:
+            kart_cek = input("Kart çekmek için (k/K) pas demek için (p/P) tuşlayınız: ")
+        else:
+            kart_cek = "H"
+        print(kart_yazdir(kart), "Puanınız:", oyuncu_puani)
+    while dagitici_puani < 16:
+        kart = desteden_kart_cek(deste)
+        deste.remove(kart)
+        dagitici_kartlari.append(kart)
+        dagitici_puani += kart_degeri_hesapla(kart)
+    print("Oyuncunun kartları")
+    deste_yazdir(oyuncu_kartlari)
+    print("Dağıtıcının kartları")
+    deste_yazdir(dagitici_kartlari)
+    if oyuncu_puani > 21:
+        oyuncu_batti = True
+    if dagitici_puani > 21:
+        dagitici_batti = True
+    if oyuncu_blackjack and not dagitici_blackjack:
+        print("oyuncunun puanı {} dağıtıcı puanı {}".format(oyuncu_puani, dagitici_puani))
+        print("Oyuncu Blackjack yaparak Kazandı.")
+    elif dagitici_blackjack and not oyuncu_blackjack:
+        print("oyuncunun puanı {} dağıtıcı puanı {}".format(oyuncu_puani, dagitici_puani))
+        print("Dağıtıcı Blackjack yaparak Kazandı.")
+    elif dagitici_blackjack and oyuncu_blackjack:
+        print("oyuncunun puanı {} dağıtıcı puanı {}".format(oyuncu_puani, dagitici_puani))
+        print("İki tarafta Blackjack yaptı berabere.")
+    elif oyuncu_batti and not dagitici_batti:
+        print("oyuncunun puanı {} dağıtıcı puanı {}".format(oyuncu_puani, dagitici_puani))
+        print("Dağıtıcı Kazandı.")
+    elif dagitici_batti and not oyuncu_batti:
+        print("oyuncunun puanı {} dağıtıcı puanı {}".format(oyuncu_puani, dagitici_puani))
+        print("Oyuncu Kazandı.")
+    elif dagitici_batti and oyuncu_batti:
+        print("oyuncunun puanı {} dağıtıcı puanı {}".format(oyuncu_puani, dagitici_puani))
+        print("İki tarafta battı berabere.")
+    elif oyuncu_puani > dagitici_puani:
+        print("oyuncunun puanı {} dağıtıcı puanı {}".format(oyuncu_puani, dagitici_puani))
+        print("Oyuncu Kazandı.")
+    elif dagitici_puani > oyuncu_puani :
+        print("oyuncunun puanı {} dağıtıcı puanı {}".format(oyuncu_puani, dagitici_puani))
+        print("Dağıtıcı Kazandı.")
+    elif dagitici_puani == oyuncu_puani:
+        print("oyuncunun puanı {} dağıtıcı puanı {}".format(oyuncu_puani, dagitici_puani))
+        print("Puanlar eşit, berabere.")
+
+
+
+
+
+menu()
