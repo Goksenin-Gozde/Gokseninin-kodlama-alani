@@ -1,0 +1,93 @@
+import random
+import math
+
+class Oyuncu:
+    def __init__(self,isim,can,saldırı,savunma,mana):
+        self.isim = isim
+        self.can = can
+        self.saldırı = saldırı
+        self.savunma = savunma
+        self.mana = mana
+    def saldır(self):
+        saldırı_gucu = (self.saldırı/10)*(random.randint(1,10))
+        return int(saldırı_gucu)
+    def block(self):
+        block = (self.savunma/10)*(random.random()+.5)
+        return int(block)
+
+    def tedavi (self):
+        if self.mana < 10:
+            print("Mananız olmadığı için iyileştirme yapamazsınız.Saldırı yapıyorsunuz.")
+            self.saldır()
+        else:
+            tedavi_miktari = int(self.mana/10) * random.randint(1,10)
+            if tedavi_miktari < 0 :
+                tedavi_miktari = 0
+            self.mana-=10
+            self.can += tedavi_miktari
+            print("{},{} kadar iyileşti. Yeni canı : {}. Manası {}:".format(self.isim,tedavi_miktari,self.can,self.mana))
+
+class Dusman(Oyuncu):
+    pass
+
+class Duello:
+    def duello_baslat(self,oyuncu,dusman):
+
+        if self.saldiri_durumu(oyuncu,dusman) == "Game Over":
+            print("Dövüş sona erdi")
+
+        if self.saldiri_durumu(dusman,oyuncu) == "Game Over":
+            print("Dövüş sona erdi")
+
+
+
+
+    @staticmethod
+    def saldiri_durumu(oyuncu,dusman):
+        oyuncu_saldiri_gucu = oyuncu.saldır()
+        dusman_block = dusman.block()
+        dusmana_verilen_hasar = math.ceil(oyuncu_saldiri_gucu-dusman_block)
+        if dusmana_verilen_hasar < 0 :
+            dusmana_verilen_hasar = 0
+        dusman.can -= dusmana_verilen_hasar
+        print("{} saldırıyor {} {} hasar aldı, kalan canı {}".format(oyuncu.isim,dusman.isim,dusmana_verilen_hasar,dusman.can))
+        if dusman.can <= 0:
+            print("{} öldü kazanan {}".format(dusman.isim,oyuncu.isim))
+            return "Game Over"
+
+        else:
+            return "Kalk ve savaşmaya devam et"
+def main():
+    oyuncu_isim = input("Dövüşçünüzün adını giriniz")
+    oyuncu_can = int(input("Lütfen dövüşçünüzün can değerini giriniz: "))
+    oyuncu_saldırı = int(input("Lütfen dövüşçünüzün saldırı gücünü giriniz: "))
+    oyuncu_savunma = int(input("Lütfen dövüşçünüzün savunma gücünü giriniz: "))
+    oyuncu_mana = int(input("Lütfen dövüşçünüzün manasını giriniz: "))
+    oyuncu = Oyuncu(oyuncu_isim,oyuncu_can,oyuncu_saldırı,oyuncu_savunma,oyuncu_mana)
+    dusman_isim = "Düşman"
+    dusman_can = int(input("Lütfen Düşmanın can değerini giriniz: "))
+    dusman_saldırı = int(input("Lütfen Düşmanın saldırı gücünü giriniz: "))
+    dusman_savunma = int(input("Lütfen Düşmanın savunma gücünü giriniz: "))
+    dusman_mana = int(input("Lütfen Düşmanın manasını giriniz: "))
+    dusman = Dusman(dusman_isim,dusman_can, dusman_saldırı, dusman_savunma, dusman_mana)
+
+    while oyuncu.can > 0 and dusman.can > 0 :
+        oyuncu_secim = int(input("Saldırmak için 1'i tedavi için 2'yi tuşlayınız: "))
+
+
+
+        if oyuncu_secim == 1:
+            duello.duello_baslat(oyuncu,dusman)
+        elif oyuncu_secim == 2:
+            oyuncu.tedavi()
+        if dusman.mana > 10:
+
+            dusman_secim = random.randint(1,2)
+            if dusman_secim == 1:
+                duello.duello_baslat(dusman,oyuncu)
+            elif dusman_secim == 2:
+                dusman.tedavi()
+        else:
+            duello.duello_baslat(dusman,oyuncu)
+duello = Duello()
+main()
